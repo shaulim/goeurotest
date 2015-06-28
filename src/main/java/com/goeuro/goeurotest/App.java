@@ -38,7 +38,7 @@ public class App {
 
 		List<Location> locations = getLocationsFromAPI(apiUrlPrefix, inputStr);
 
-		System.out.print("locations: " + locations);
+		System.out.println("locations: " + locations);
 		
 		List<LocationCSV> locationsCSV = transformToCSV(locations);
 		
@@ -47,6 +47,11 @@ public class App {
 
 	private static void createCSVFile(List<LocationCSV> locationsCSV) throws FileNotFoundException,
 			UnsupportedEncodingException, IOException, JsonGenerationException, JsonMappingException {
+		
+		final String CSV_FILE_NAME = "locations.csv";
+		
+		System.out.println("Creating CSV file " + CSV_FILE_NAME + " with locations");
+		
 		// create mapper and schema
         CsvMapper csvMapper = new CsvMapper();
         CsvSchema schema = csvMapper.schemaFor(LocationCSV.class);
@@ -54,7 +59,7 @@ public class App {
         
         // output writer
         ObjectWriter myObjectWriter = csvMapper.writer(schema);
-        File tempFile = new File("locations.csv");
+        File tempFile = new File(CSV_FILE_NAME);
         FileOutputStream tempFileOutputStream = new FileOutputStream(tempFile);
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(tempFileOutputStream, 1024);
         OutputStreamWriter writerOutputStream = new OutputStreamWriter(bufferedOutputStream, "UTF-8");
@@ -72,6 +77,9 @@ public class App {
 
 	private static List<Location> getLocationsFromAPI(final String apiUrlPrefix, String inputStr)
 			throws IOException, ClientProtocolException, JsonParseException, JsonMappingException {
+		
+		System.out.println("quering API : " + apiUrlPrefix + inputStr);
+		
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpGet getReq = new HttpGet(apiUrlPrefix + inputStr);
 
